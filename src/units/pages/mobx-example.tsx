@@ -1,25 +1,23 @@
 import * as React from 'react';
 
 import './mobx-example.scss'
+import { TodoListModel, TodoModel } from '../mobx/state';
+import { TodoList } from '../components';
+import { CreateTodoForm } from '../components/create-todo-form';
+
+const store = new TodoListModel();
 
 export class MobXExamplePage extends React.Component {
+
+  private onAdd = (newTodo: TodoModel) => {
+    store.addTodo(newTodo);
+  };
+
   public render(): React.ReactNode {
     return (
-      <div className="mobx-example">
-        <header className="mobx-example__header">
-          <span className="mobx-example__logo">logo</span>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="mobx-example__link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <CreateTodoForm onAdd={this.onAdd} />
+        <TodoList todoList={store} />
       </div>
     );
   }
