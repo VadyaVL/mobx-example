@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { BudillaPage } from './units/budilla/pages';
 
-import { MobXExamplePage } from './units/pages';
 
 export const App: React.StatelessComponent = () => (
-  <MobXExamplePage />
+  <BudillaPage />
 );
