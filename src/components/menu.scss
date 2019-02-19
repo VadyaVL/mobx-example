@@ -1,0 +1,13 @@
+@import '../common/base-styles.scss';
+
+.menu {
+	display: none;
+	width: $menu-width;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	&.open {
+		display: initial;
+	}
+}

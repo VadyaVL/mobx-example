@@ -1,0 +1,7 @@
+@import '../common/base-styles.scss';
+
+.main-layout {
+	&__content {
+		padding-top: $header-height;
+	}
+}
