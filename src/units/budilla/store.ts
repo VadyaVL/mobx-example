@@ -1,40 +1,55 @@
-import { observable, computed, action } from 'mobx';
+import { types, onSnapshot } from 'mobx-state-tree';
 
-export class TaskModel {
-  public id: number = Math.random();
+const TaskModel = types
+  .model('Task', {
+    id: types.optional(types.number, Math.random),
+    title: types.string,
+    dateTime: types.string,
+    done: types.optional(types.boolean, false),
+  })
+  .actions(self => ({
+    markAsDone: () => { self.done = true; },
+    changeDone: (val: boolean) => { self.done = val; },
+    changeTitle: (val: string) => { self.title = val; },
+    changeDateTime: (val: string) => { self.dateTime = val; },
+  }));
 
-  @observable
-  public title: string;
-  @observable
-  public dateTime: string;
-  @observable
-  public finished: boolean = false;
-  
-  constructor (title: string = '', dateTime: string) {
-    this.title = title;
-    this.dateTime = dateTime;
-  }
+const TaskListModel = types
+  .model('TaskList', {
+    taskList: types.array(TaskModel),
+  })
+  .views(self => ({
+    get unDoneTaskCount() {
+      return self.taskList.filter(task => !task.done).length;
+    }
+  }))
+  .actions(self => ({
+    addTask: (title: string, dateTime: string) => {
+      self.taskList.push(TaskModel.create({
+        title,
+        dateTime,
+      }))
+    }
+  }));
 
-  
-  @action
-  public markAsFinished(): void {
-    this.finished = true;
+const STORE_KEY = 'taskListStore';
+
+let initialState = null;
+
+if (localStorage.getItem(STORE_KEY)) {
+  const json = JSON.parse(localStorage.getItem(STORE_KEY));
+
+  if (TaskListModel.is(json)) {
+    initialState = json;
   }
 }
 
-export class TaskListModel {
-  @observable
-  public tasks: TaskModel[] = [];
-  
-  @computed
-  public get unfinishedTodoCount(): number {
-    return this.tasks.filter(todo => !todo.finished).length;
-  }
+export type TaskModelStoreType = typeof TaskModel.Type;
+export type TaskListModelStoreType = typeof TaskListModel.Type;
+export const taskListStoreInstance = TaskListModel.create(initialState ? initialState : {
+  taskList: [],
+});
 
-  @action
-  public addTask(newTodo: TaskModel): void {
-    this.tasks.push(newTodo);
-  }
-}
-
-export const taskListStore = new TaskListModel();
+onSnapshot(taskListStoreInstance, snapshot => {
+  localStorage.setItem(STORE_KEY,JSON.stringify(snapshot));
+});

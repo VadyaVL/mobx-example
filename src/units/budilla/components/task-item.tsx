@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TaskModel } from '../store';
+import { TaskModelStoreType } from '../store';
 
 interface Props {
-  task: TaskModel;
+  task: TaskModelStoreType;
 }
 
 export const TaskItem: React.StatelessComponent<Props> = ({

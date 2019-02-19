@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import { MainLayout } from '../../../components';
-import { taskListStore } from '../store';
 import { TaskList } from '../components';
+import { taskListStoreInstance } from '../store';
 
 export class BudillaPage extends React.Component {
   public render(): React.ReactNode {
@@ -10,7 +10,7 @@ export class BudillaPage extends React.Component {
       <MainLayout>
         <div className='budilla-page'>
           <TaskList
-            taskList={taskListStore}
+            taskList={taskListStoreInstance}
           />
         </div>
       </MainLayout>
