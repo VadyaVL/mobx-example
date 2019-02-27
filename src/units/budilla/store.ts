@@ -1,5 +1,7 @@
 import { types, onSnapshot } from 'mobx-state-tree';
 
+const makeInspectable = require('mobx-devtools-mst');
+
 const TaskModel = types
   .model('Task', {
     id: types.optional(types.number, Math.random),
@@ -53,3 +55,6 @@ export const taskListStoreInstance = TaskListModel.create(initialState ? initial
 onSnapshot(taskListStoreInstance, snapshot => {
   localStorage.setItem(STORE_KEY,JSON.stringify(snapshot));
 });
+
+console.log('makeInspectable', makeInspectable);
+makeInspectable.default(taskListStoreInstance);
